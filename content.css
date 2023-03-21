@@ -1,0 +1,36 @@
+.share-button {
+    background-color: #202123;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+    align-items: center;
+    height: 3em;
+    align-self: flex-end;
+}
+
+.share-button::before {
+    background-size: 16px 16px;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@media (min-height: 770px) {
+    .share-button {
+        margin: 0;
+        padding: 0px 16px;
+        align-items: start;
+    }
+
+    .share-button::before {
+        left: 0;
+    }
+}
