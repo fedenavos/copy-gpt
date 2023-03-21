@@ -1,4 +1,4 @@
-.share-button {
+.copy-button {
     background-color: #202123;
     color: white;
     border: none;
@@ -13,7 +13,7 @@
     align-self: flex-end;
 }
 
-.share-button::before {
+.copy-button::before {
     background-size: 16px 16px;
     width: 16px;
     height: 16px;
@@ -24,13 +24,13 @@
 }
 
 @media (min-height: 770px) {
-    .share-button {
+    .copy-button {
         margin: 0;
         padding: 0px 16px;
         align-items: start;
     }
 
-    .share-button::before {
+    .copy-button::before {
         left: 0;
     }
 }
