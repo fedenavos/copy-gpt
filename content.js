@@ -38,6 +38,27 @@ function addButtonToChat() {
     targetElement.appendChild(copyTextButton);
 }
 
+// Observer to detect when the chat is loaded
+function addObserver() {
+    const targetNode = document.querySelector('body');
+
+    const config = { childList: true, subtree: true };
+
+    const callback = (mutationsList) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                const targetElement = document.querySelector('form');
+                if (targetElement && !document.querySelector('.copy-button')) {
+                    addButtonToChat();
+                }
+            }
+        }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+}
+
 // Scrape the messages from the page
 function extractMessages() {
     const messageElements = document.querySelectorAll(
@@ -155,3 +176,4 @@ function copyGPTText(messages) {
 }
 
 addButtonToChat();
+addObserver();
