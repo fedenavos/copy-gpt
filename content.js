@@ -46,22 +46,79 @@ function extractMessages() {
     const messages = [];
 
     messageElements.forEach((element) => {
-        messages.push(element.textContent);
+        messages.push(element.innerHTML);
     });
 
     return messages;
 }
 
+function formatMessageHTML(html) {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    // Remove all the <br> tags
+    const brs = tempDiv.querySelectorAll("br");
+    brs.forEach((br) => {
+        br.outerHTML = "\n";
+    });
+
+    // Print all the <p> tags on a new line
+    const paragraphs = tempDiv.querySelectorAll("p");
+    paragraphs.forEach((paragraph) => {
+        // If the next element is not a <ul> or <ol> tag, add two new lines
+        if (paragraph.nextElementSibling && paragraph.nextElementSibling.tagName != "UL" && paragraph.nextElementSibling.tagName != "OL") {
+            paragraph.outerHTML = paragraph.innerHTML + "\n \n";
+        } else {
+            paragraph.outerHTML = paragraph.innerHTML + "\n";
+        }
+    });
+
+    // Print all the <ul> and <ol> tags on a new line
+    const lists = tempDiv.querySelectorAll("ul, ol");
+    lists.forEach((list) => {
+        // if the ul or ol tag is the last element, add two new lines
+        let neededNewLines = "";
+        if (list.nextElementSibling == null) {
+            neededNewLines = "";
+        } else {
+            neededNewLines = "\n \n";
+        }
+        const items = list.querySelectorAll("li");
+        let listText = "";
+
+        items.forEach((item, index) => {
+            if (list.tagName == "OL") {
+                if (index == items.length - 1) {
+                    listText += `\n${index + 1}. ${item.innerHTML} ${neededNewLines}`;
+                } else {
+                    listText += `\n${index + 1}. ${item.innerHTML}`;
+                }
+            } else {
+                if (index == items.length - 1) {
+                    listText += `\n• ${item.innerHTML} ${neededNewLines}`;
+                } else {
+                    listText += `\n• ${item.innerHTML}`;
+                }
+            }
+        });
+
+        list.outerHTML = listText;
+    });
+
+    return tempDiv.textContent;
+}
+
 // Copy the conversation text to the clipboard
 function copyConversationText(messages) {
-
     let text = "";
 
     messages.forEach((message, index) => {
+        const formattedMessage = formatMessageHTML(message);
+
         if (index % 2 == 0) {
-            text += "You: " + message + "\n \n";
+            text += "You: " + formattedMessage + "\n \n";
         } else {
-            text += "ChatGPT: " + message + "\n \n";
+            text += "ChatGPT: " + formattedMessage + "\n \n";
         }
     });
 
@@ -77,12 +134,13 @@ function copyConversationText(messages) {
 
 // Copy only the Chat messages to the clipboard
 function copyGPTText(messages) {
-
     let text = "";
 
     messages.forEach((message, index) => {
+        const formattedMessage = formatMessageHTML(message);
+
         if (index % 2 != 0) {
-            text += message + "\n \n";
+            text += formattedMessage + "\n \n";
         }
     });
 
@@ -97,4 +155,3 @@ function copyGPTText(messages) {
 }
 
 addButtonToChat();
-
