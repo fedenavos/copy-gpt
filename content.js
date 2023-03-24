@@ -1,4 +1,4 @@
-// Add the button to the page
+// Add the button to the chat interface
 function addButtonToChat() {
     const targetElement = document.querySelector('form');
 
@@ -38,7 +38,8 @@ function addButtonToChat() {
     targetElement.appendChild(copyTextButton);
 }
 
-// Observer to detect when the chat is loaded
+
+// Observer to detect when the chat is loaded, and add the button to the chat
 function addObserver() {
     const targetNode = document.querySelector('body');
 
@@ -59,7 +60,8 @@ function addObserver() {
     observer.observe(targetNode, config);
 }
 
-// Scrape the messages from the page
+
+// Scrape the messages from the page (messages has class "min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap")
 function extractMessages() {
     const messageElements = document.querySelectorAll(
         '[class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap"]'
@@ -73,18 +75,18 @@ function extractMessages() {
     return messages;
 }
 
-function formatMessageHTML(html) {
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = html;
 
-    // Remove all the <br> tags
-    const brs = tempDiv.querySelectorAll("br");
-    brs.forEach((br) => {
-        br.outerHTML = "\n";
-    });
+// Format the code blocks to be more readable
+function handleCodeBlock(codeBlock) {
+    const codeElement = codeBlock.querySelector("code");
+    const language = codeBlock.querySelector("span").textContent;
+    const codeText = codeElement.textContent;
+    return `[${language}]\n${codeText}\n`;
+}
 
-    // Print all the <p> tags on a new line
-    const paragraphs = tempDiv.querySelectorAll("p");
+
+// Format the <p> elements to be more readable
+function handleParagraphs(paragraphs) {
     paragraphs.forEach((paragraph) => {
         // If the next element is not a <ul> or <ol> tag, add two new lines
         if (paragraph.nextElementSibling && paragraph.nextElementSibling.tagName != "UL" && paragraph.nextElementSibling.tagName != "OL") {
@@ -93,9 +95,11 @@ function formatMessageHTML(html) {
             paragraph.outerHTML = paragraph.innerHTML + "\n";
         }
     });
+}
 
-    // Print all the <ul> and <ol> tags on a new line
-    const lists = tempDiv.querySelectorAll("ul, ol");
+
+// Format the lists to be more readable
+function handleLists(lists) {
     lists.forEach((list) => {
         // if the ul or ol tag is the last element, add two new lines
         let neededNewLines = "";
@@ -125,11 +129,39 @@ function formatMessageHTML(html) {
 
         list.outerHTML = listText;
     });
+}
+
+
+// Format the message HTML to be more readable
+function formatMessageHTML(html) {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    // Remove all the <br> tags
+    const brs = tempDiv.querySelectorAll("br");
+    brs.forEach((br) => {
+        br.outerHTML = "\n";
+    });
+
+    // Print all the <p> tags on a new line
+    const paragraphs = tempDiv.querySelectorAll("p");
+    handleParagraphs(paragraphs);
+
+    // Format code blocks
+    const codeBlocks = tempDiv.querySelectorAll("pre");
+    codeBlocks.forEach((codeBlock) => {
+        codeBlock.outerHTML = handleCodeBlock(codeBlock);
+    });
+
+    // Print all the <ul> and <ol> tags on a new line
+    const lists = tempDiv.querySelectorAll("ul, ol");
+    handleLists(lists);
 
     return tempDiv.textContent;
 }
 
-// Copy the conversation text to the clipboard
+
+// Copy the conversation to the clipboard
 function copyConversationText(messages) {
     let text = "";
 
@@ -153,6 +185,7 @@ function copyConversationText(messages) {
     });
 }
 
+
 // Copy only the Chat messages to the clipboard
 function copyGPTText(messages) {
     let text = "";
@@ -175,5 +208,7 @@ function copyGPTText(messages) {
     });
 }
 
+
+// main
 addButtonToChat();
 addObserver();
