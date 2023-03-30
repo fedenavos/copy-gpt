@@ -210,5 +210,11 @@ function copyGPTText(messages) {
 
 
 // main
-addButtonToChat();
-addObserver();
+try {
+    addButtonToChat();
+    addObserver();
+}
+catch (e) {
+    console.log(e);
+    console.log("Error adding CopyGPT buttons to chat");
+}
