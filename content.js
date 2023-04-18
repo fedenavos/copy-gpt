@@ -90,7 +90,7 @@ function handleParagraphs(paragraphs) {
     paragraphs.forEach((paragraph) => {
         // If the next element is not a <ul> or <ol> tag, add two new lines
         if (paragraph.nextElementSibling && paragraph.nextElementSibling.tagName != "UL" && paragraph.nextElementSibling.tagName != "OL") {
-            paragraph.outerHTML = paragraph.innerHTML + "\n \n";
+            paragraph.outerHTML = paragraph.innerHTML + "\n\n";
         } else {
             paragraph.outerHTML = paragraph.innerHTML + "\n";
         }
@@ -157,7 +157,10 @@ function formatMessageHTML(html) {
     const lists = tempDiv.querySelectorAll("ul, ol");
     handleLists(lists);
 
-    return tempDiv.textContent;
+    // Replace 4 or more consecutive newline characters with 2 newline characters
+    const formattedText = tempDiv.textContent.replace(/(\n){4,}/g, "\n\n");
+
+    return formattedText;
 }
 
 
@@ -169,9 +172,9 @@ function copyConversationText(messages) {
         const formattedMessage = formatMessageHTML(message);
 
         if (index % 2 == 0) {
-            text += "You: " + formattedMessage + "\n \n";
+            text += "You: " + formattedMessage + "\n\n";
         } else {
-            text += "ChatGPT: " + formattedMessage + "\n \n";
+            text += "ChatGPT: " + formattedMessage + "\n\n";
         }
     });
 
@@ -194,7 +197,7 @@ function copyGPTText(messages) {
         const formattedMessage = formatMessageHTML(message);
 
         if (index % 2 != 0) {
-            text += formattedMessage + "\n \n";
+            text += formattedMessage + "\n\n";
         }
     });
 
@@ -213,8 +216,11 @@ function copyGPTText(messages) {
 try {
     addButtonToChat();
     addObserver();
+    console.log('CopyGPT buttons added to chat');
 }
 catch (e) {
     console.log(e);
     console.log("Error adding CopyGPT buttons to chat");
 }
+
+console.log("CopyGPT loaded");
