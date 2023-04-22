@@ -1,5 +1,9 @@
 // Add the button to the chat interface
 function addButtonToChat() {
+    if (document.querySelector('.copy-button')) {
+        return;
+    }
+
     const targetElement = document.querySelector('form');
 
     const copyButton = document.createElement('button');
