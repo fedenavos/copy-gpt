@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "CopyGPT",
     "description": "Share your ChatGPT chat logs with friends or save them to your computer.",
-    "version": "1.4",
+    "version": "1.5",
     "action": {
         "default_title": "CopyGPT",
         "default_icon": {
