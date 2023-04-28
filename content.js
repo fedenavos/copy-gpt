@@ -68,8 +68,9 @@ function addObserver() {
 // Scrape the messages from the page (messages has class "min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap")
 function extractMessages() {
     const messageElements = document.querySelectorAll(
-        '[class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap"]'
-    );
+        ':is([class*="min-h-[20px]"][class*="flex"][class*="flex-col"][class*="items-start"][class*="gap-4"])'
+    );    
+
     const messages = [];
 
     messageElements.forEach((element) => {
